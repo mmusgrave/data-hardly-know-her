@@ -1,5 +1,5 @@
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc, html
+
 import plotly.express as px
 import pandas as pd
 
@@ -13,24 +13,24 @@ def convert_data(df, col_name, col_nn, col_arima, col_avg):
         week = df['week'].loc[(df['week'] == i)].iloc[0]
         model = 'NN'
         result = df[col_nn].loc[(df['week'] == i)].iloc[0]
-        graph_df = graph_df.append({'Week': week,
-                                    'Model': model,
-                                    col_name: result
-                                    }, ignore_index=True)
+        graph_df = pd.concat([graph_df, pd.DataFrame({'Week': week,
+                                        'Model': model,
+                                        col_name: result
+                                        }, index=[0, 1, 2, 3])], ignore_index=True)
 
         model = 'ARIMA'
         result = df[col_arima].loc[(df['week'] == i)].iloc[0]
-        graph_df = graph_df.append({'Week': week,
-                                    'Model': model,
-                                    col_name: result
-                                    }, ignore_index=True)
+        graph_df = pd.concat([graph_df, pd.DataFrame({'Week': week,
+                                        'Model': model,
+                                        col_name: result
+                                        }, index=[0, 1, 2, 3])], ignore_index=True)
 
         model = 'Average'
         result = df[col_avg].loc[(df['week'] == i)].iloc[0]
-        graph_df = graph_df.append({'Week': week,
+        graph_df = pd.concat([graph_df, pd.DataFrame({'Week': week,
                                     'Model': model,
                                     col_name: result
-                                    }, ignore_index=True)
+                                    }, index=[0, 1, 2, 3])], ignore_index=True)
 
         graph_df = graph_df.sort_values(by=['Model', 'Week'])
     return graph_df
